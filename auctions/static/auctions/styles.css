@@ -1,0 +1,35 @@
+
+img{
+    height: 350px;
+    width: 90%;
+    margin: 20px;
+}
+
+.auction, .aucpage{
+    background-color: rgba(211, 238, 255, 0.904);
+    border-radius: 10px;
+}
+
+.auction:hover{
+    background-color: rgba(244, 249, 250, 0.904);
+
+}
+.aucname{
+    justify-content: space-evenly;
+}
+
+body {
+    padding: 10px;
+    background-color: rgb(50, 55, 58);
+}
+.line{
+    justify-content: space-evenly;
+}
+
+.link:hover{
+    text-decoration: none;
+}
+
+.price{
+    font-size: 20px;
+}

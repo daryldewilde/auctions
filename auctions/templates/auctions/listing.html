@@ -1,0 +1,73 @@
+{% extends 'auctions/layout.html' %}
+{% load static %}
+
+{% block body %}
+<div class="text-white container border border-secondary aucpage"> 
+  <h3 class="d-flex text-info aucname">{{listing.name}}</h3>
+  <img src="{% static 'auctions/images/' %}{{listing.image_name}}" id="listingimg" alt="{{listing.image_name}}" class="rounded text-dark"><br>
+  <strong class="text-success price">$
+    {% if listing.actual_bid %}{{listing.actual_bid}}{% else %}{{listing.start_bid}}{% endif %}
+  </strong><br>
+
+  {% if not user.is_authenticated %}
+      {% if listing.active == 'F' %}
+          <strong class="text-danger price">Closed</strong>
+      {% endif %}
+  {% endif %}
+
+  {% if user.is_authenticated %}
+        {% if user == winner %}<strong class="text-success price">Congratulations you won this auction</strong>{% endif %}
+        {% if listing.active == 'F' %}
+              <strong class="text-danger price">Closed</strong>
+        {% else %}
+            
+            {% if user == listing.user %}
+              <a href="{% url 'close' id=listing.id%}" class="btn btn-danger m-1">Close</a>
+            {% else%}
+                <form action="{% url 'listing' id=listing.id us=user.username%}" method="post" class="text-danger">
+                  {% csrf_token%}
+                  <input type ="hidden" name="user" value="{{user}}">
+                  {% if error %}
+                    <p class="text-danger">{{error}}</p>
+                  {% endif %}
+                  {{form}}  
+                  <input type="submit" value="place bid" class="btn btn-primary mb-2">
+                      {% if check %}
+                          <a href="{% url 'remove_from_watchlist' user=user.username auct=listing.id%}" class="btn btn-danger mb-2">Remove from watchlist</a>
+                      {% else %}
+                          <a href="{% url 'add_to_watchlist' user=user.username auct=listing.id%}" class="btn btn-primary mb-2">Add to watchlist</a>
+                      {% endif %}
+                  </form>
+            {% endif %}
+
+        {% endif %}
+        <form  method="post" action="{% url 'comment' user=user.username auction=listing.name %}">
+          {% csrf_token %}
+          <input type ="hidden" name="user" value="{{user}}">
+          {{form2}}
+          <input type="submit" value="comment" class="btn btn-primary mb-1 mt-2">
+        </form>
+  {% endif %}
+  
+  
+  
+  <p class="text-dark"> 
+    <strong>Listed by: </strong>{{listing.user}}<br>
+    <strong>Category: </strong>{{listing.category}}<br>
+    <strong>Description: </strong>{{listing.description}}<br>
+  </p>
+  <h3 class="text-dark">Comments </h3>
+  {% for comment in comments%}
+    <div class=" col-12 text-light border border-secondary mb-2 bg-dark">
+      <strong>{{comment.user}}:</strong>
+        <p>
+            {{comment.comment}}
+        </p>
+    </div>
+    {% empty%}
+    <strong class="text-dark">There are no comments yet for this auction</strong>
+  {% endfor %}
+ 
+</div>
+
+{% endblock  %}

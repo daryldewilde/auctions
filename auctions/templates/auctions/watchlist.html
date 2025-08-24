@@ -1,0 +1,27 @@
+{% extends 'auctions/layout.html' %}
+{% load static %}
+{% block title %}
+    watchlist
+{% endblock  %}
+{% block body %}
+        <div class = "row d-flex line"> 
+            {% for auction in auctions %}
+                        <div class ="col-10 col-sm-5 col-lg-3  border border-secondary p-1 mb-4 m-1 mt-2 auction">
+                            <a href= "{% url 'listing' id=auction.auction.id us=user.username%}" class="link">
+                                <div>
+                                    <h3 class = "text-info d-flex aucname">{{auction.auction.name}}</h3>
+                                    <img  src="{% static 'auctions/images/' %}{{auction.auction.image_name}}" alt ="{{auction.auction.name}}" id="indeximg" >
+                                    {% if auction.auction.active == 'F' %}
+                                        <br><strong class="text-danger price">Closed</strong><br> 
+                                    {% endif%}
+                                    <em class = "text-secondary"><strong>Price</strong>: ${{auction.auction.start_bid}}</em>
+                                </div>
+                            </a>     
+                        </div>
+            {% empty %}
+             <h2 class="text-light">Nothing in your watchlist yet</h2> 
+                
+            {% endfor %}
+
+        </div>
+{% endblock  %}
